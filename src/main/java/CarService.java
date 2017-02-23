@@ -1,15 +1,18 @@
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 public class CarService implements AutoCloseable{
     private static String URL = "jdbc:postgresql://127.0.0.1:5432/homework5";
     private static String USER = "user";
     private static String PASSWORD = "password";
+    private static String DRIVER_LOCATION = "org.postgresql.Driver";
 
     private String url;
     private String user;
     private String password;
+    private String driverLocation;
 
     private Connection connection;
 
@@ -17,12 +20,21 @@ public class CarService implements AutoCloseable{
         this.url = URL;
         this.user = USER;
         this.password = PASSWORD;
+        this.driverLocation = DRIVER_LOCATION;
     }
 
-    public CarService(String url, String user, String password) {
+    public CarService(String driverLocation, String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
+        this.driverLocation = driverLocation;
+    }
+
+    public CarService (Properties dataBaseProperties){
+        this.url = dataBaseProperties.getProperty("db.url");
+        this.user = dataBaseProperties.getProperty("db.username");
+        this.password = dataBaseProperties.getProperty("db.password");
+        this.driverLocation = dataBaseProperties.getProperty("jdbc.driver");
     }
 
     public Engine getEngineById(int id){
@@ -148,12 +160,12 @@ public class CarService implements AutoCloseable{
 
     private void init(){
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(driverLocation);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }

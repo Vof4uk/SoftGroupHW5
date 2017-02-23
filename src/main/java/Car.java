@@ -77,4 +77,15 @@ public class Car {
         result = 31 * result + getPrice();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", make='" + make + '\'' +
+                ", engine=" + engine +
+                ", price=" + price +
+                '}';
+    }
 }

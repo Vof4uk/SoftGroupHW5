@@ -1,20 +1,47 @@
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 public class CarServiceTest {
-    private static String URL = "jdbc:postgresql://127.0.0.1:5432/homework5";
-    private static String USER = "user";
-    private static String PASSWORD = "password";
+    private static String URL;
+    private static String USER;
+    private static String PASSWORD;
+    private static String DRIVER_LOCATION;
+
+    @BeforeClass
+    public static void loadProperties() {
+        Properties prop = new Properties();
+        InputStream input = null;
+
+        try {
+            input = CarService.class.getClassLoader().getResourceAsStream("db.properties");
+            prop.load(input);
+            URL = prop.getProperty("test.db.url");
+            USER = prop.getProperty("test.db.username");
+            PASSWORD = prop.getProperty("test.db.password");
+            DRIVER_LOCATION = prop.getProperty("test.jdbc.driver");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     private CarService service;
 
     @Before
     public void beforeTest(){
         new TestDBData(URL, USER, PASSWORD).flush();
-        this.service = new CarService(URL, USER, PASSWORD);
+        this.service = new CarService(DRIVER_LOCATION, URL, USER, PASSWORD);
     }
 
     @After

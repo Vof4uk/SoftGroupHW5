@@ -65,4 +65,13 @@ public class Engine {
         result = 31 * result + getPower();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Engine{" +
+                "id=" + id +
+                ", displacement=" + displacement +
+                ", power=" + power +
+                '}';
+    }
 }
